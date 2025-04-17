@@ -11,6 +11,7 @@ from crypto_mcp.exchanges.base import (
     Order,
 )
 from tests.test_requester import FakeHTTPRequester
+from crypto_mcp.exceptions import CryptoAPIException
 
 
 @pytest.fixture
@@ -336,3 +337,17 @@ async def test_get_order_book(success_order_book_response):
             ),
         ],
     )
+
+
+@pytest.mark.asyncio
+async def test_get_failed_message():
+    requester = FakeHTTPRequester(
+        httpx.Response(400, json={"error": {"message": "Get Balances Failed"}})
+    )
+    sut = Upbit(requester)
+
+    with pytest.raises(CryptoAPIException) as e:
+        await sut.get_balances()
+
+    assert e.value.code == "400"
+    assert e.value.message == "Get Balances Failed"

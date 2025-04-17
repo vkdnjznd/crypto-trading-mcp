@@ -13,29 +13,24 @@ class CryptoAPIException(Exception):
 
 @dataclass
 class AuthenticationException(CryptoAPIException):
-    code: str = "401"
-    message: str = "Authentication failed"
+    pass
 
 
 @dataclass
 class BadRequestException(CryptoAPIException):
-    code: str = "400"
-    message: str = "Bad Request"
+    pass
 
 
 @dataclass
 class NotFoundException(CryptoAPIException):
-    code: str = "404"
-    message: str = "Not Found"
+    pass
 
 
 @dataclass
 class RateLimitException(CryptoAPIException):
-    code: str = "429"
-    message: str = "Rate Limit Exceeded"
+    pass
 
 
 @dataclass
 class InternalServerErrorException(CryptoAPIException):
-    code: str = "500"
-    message: str = "Internal Server Error"
+    pass

@@ -1,3 +1,5 @@
+import httpx
+
 from abc import ABC, abstractmethod
 from typing import Literal, Optional
 from dataclasses import dataclass
@@ -83,17 +85,25 @@ class CryptoExchange(ABC):
 
     def _raise_for_failed_response(self, status_code: int, message: str = None):
         if status_code == 401:
-            raise AuthenticationException()
+            raise AuthenticationException(
+                "401", message=message or "Authentication failed"
+            )
         elif status_code == 400:
-            raise BadRequestException(message)
+            raise BadRequestException("400", message=message or "Bad Request")
         elif status_code == 404:
-            raise NotFoundException()
+            raise NotFoundException("404", message=message or "Not Found")
         elif status_code == 429:
-            raise RateLimitException()
+            raise RateLimitException("429", message=message or "Rate Limit Exceeded")
         elif status_code == 500:
-            raise InternalServerErrorException()
+            raise InternalServerErrorException(
+                "500", message=message or "Internal Server Error"
+            )
         else:
-            raise CryptoAPIException(status_code, message)
+            raise CryptoAPIException(str(status_code), message)
+
+    @abstractmethod
+    def _get_error_message(self, response: httpx.Response) -> str:
+        pass
 
     @abstractmethod
     async def get_symbols(self) -> list[CryptoTradingPair]:
