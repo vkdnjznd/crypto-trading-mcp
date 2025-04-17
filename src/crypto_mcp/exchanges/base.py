@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from typing import Literal, Optional
 from dataclasses import dataclass
 
-from crypto_mcp.http import HTTPRequester
+from crypto_mcp.http_handler import HTTPRequester
 from crypto_mcp.exceptions import (
     AuthenticationException,
     BadRequestException,
