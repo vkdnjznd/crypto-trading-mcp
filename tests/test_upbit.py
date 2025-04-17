@@ -171,6 +171,60 @@ def success_order_response():
 
 
 @pytest.fixture
+def success_open_orders_response():
+    return httpx.Response(
+        200,
+        json=[
+            {
+                "uuid": "d098ceaf-6811-4df8-97f2-b7e01aefc03f",
+                "side": "bid",
+                "ord_type": "limit",
+                "price": "104812000",
+                "state": "wait",
+                "market": "KRW-BTC",
+                "created_at": "2024-06-13T10:26:21+09:00",
+                "volume": "0.00101749",
+                "remaining_volume": "0.00006266",
+                "reserved_fee": "53.32258094",
+                "remaining_fee": "3.28375996",
+                "paid_fee": "50.03882098",
+                "locked": "6570.80367996",
+                "executed_volume": "0.00095483",
+                "executed_funds": "100077.64196",
+                "trades_count": 1,
+            },
+        ],
+    )
+
+
+@pytest.fixture
+def success_closed_orders_response():
+    return httpx.Response(
+        200,
+        json=[
+            {
+                "uuid": "e5715c44-2d1a-41e6-91d8-afa579e28731",
+                "side": "ask",
+                "ord_type": "limit",
+                "price": "103813000",
+                "state": "done",
+                "market": "KRW-BTC",
+                "created_at": "2024-06-13T10:28:36+09:00",
+                "volume": "0.00039132",
+                "remaining_volume": "0",
+                "reserved_fee": "0",
+                "remaining_fee": "0",
+                "paid_fee": "20.44627434",
+                "locked": "0",
+                "executed_volume": "0.00039132",
+                "executed_funds": "40892.54868",
+                "trades_count": 2,
+            },
+        ],
+    )
+
+
+@pytest.fixture
 def success_order_book_response():
     return httpx.Response(
         200,
@@ -356,6 +410,48 @@ async def test_get_order(success_order_response):
 
 
 @pytest.mark.asyncio
+async def test_get_open_orders(success_open_orders_response):
+    requester = FakeHTTPRequester(success_open_orders_response)
+    sut = Upbit(requester)
+    orders = await sut.get_open_orders("KRW-BTC", 1, 100)
+
+    assert orders == [
+        Order(
+            order_id="d098ceaf-6811-4df8-97f2-b7e01aefc03f",
+            side="bid",
+            amount=0.00101749,
+            price=104812000,
+            order_type="limit",
+            status="wait",
+            executed_volume=0.00095483,
+            remaining_volume=0.00006266,
+            created_at=1718241981000,
+        ),
+    ]
+
+
+@pytest.mark.asyncio
+async def test_get_closed_orders(success_closed_orders_response):
+    requester = FakeHTTPRequester(success_closed_orders_response)
+    sut = Upbit(requester)
+    orders = await sut.get_closed_orders("KRW-BTC", 1, 100)
+
+    assert orders == [
+        Order(
+            order_id="e5715c44-2d1a-41e6-91d8-afa579e28731",
+            side="ask",
+            amount=0.00039132,
+            price=103813000,
+            order_type="limit",
+            status="done",
+            executed_volume=0.00039132,
+            remaining_volume=0,
+            created_at=1718242116000,
+        ),
+    ]
+
+
+@pytest.mark.asyncio
 async def test_get_order_book(success_order_book_response):
     requester = FakeHTTPRequester(success_order_book_response)
     sut = Upbit(requester)
@@ -388,20 +484,6 @@ async def test_get_order_book(success_order_book_response):
 
 
 @pytest.mark.asyncio
-async def test_get_failed_message():
-    requester = FakeHTTPRequester(
-        httpx.Response(400, json={"error": {"message": "Get Balances Failed"}})
-    )
-    sut = Upbit(requester)
-
-    with pytest.raises(CryptoAPIException) as e:
-        await sut.get_balances()
-
-    assert e.value.code == "400"
-    assert e.value.message == "Get Balances Failed"
-
-
-@pytest.mark.asyncio
 async def test_place_order(success_place_order_response):
     requester = FakeHTTPRequester(success_place_order_response)
     sut = Upbit(requester)
@@ -427,3 +509,17 @@ async def test_cancel_order(success_cancel_order_response):
     result = await sut.cancel_order("cdd92199-2897-4e14-9448-f923320408ad")
 
     assert result is True
+
+
+@pytest.mark.asyncio
+async def test_get_failed_message():
+    requester = FakeHTTPRequester(
+        httpx.Response(400, json={"error": {"message": "Get Balances Failed"}})
+    )
+    sut = Upbit(requester)
+
+    with pytest.raises(CryptoAPIException) as e:
+        await sut.get_balances()
+
+    assert e.value.code == "400"
+    assert e.value.message == "Get Balances Failed"
