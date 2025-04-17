@@ -1,0 +1,154 @@
+from abc import ABC, abstractmethod
+from typing import Literal, Optional
+from dataclasses import dataclass
+
+from crypto_mcp.http import HTTPRequester
+from crypto_mcp.exceptions import (
+    AuthenticationException,
+    BadRequestException,
+    NotFoundException,
+    InternalServerErrorException,
+    CryptoAPIException,
+    RateLimitException,
+)
+
+
+@dataclass
+class CryptoTradingPair:
+    symbol: str
+    name: str
+
+
+@dataclass
+class Ticker:
+    symbol: str
+    trade_timestamp: int
+    trade_price: float
+    trade_volume: float
+    opening_price: float
+    high_price: float
+    low_price: float
+    change_rate: float
+    change_price: float
+    acc_trade_volume: float
+    acc_trade_price: float
+    timestamp: int
+
+
+@dataclass
+class Balance:
+    currency: str
+    balance: float
+    locked: float
+    avg_buy_price: float
+    avg_buy_price_modified: bool
+    unit_currency: str
+
+
+@dataclass
+class Order:
+    order_id: str
+    side: str
+    amount: float
+    price: float
+    order_type: Literal["limit", "market"]
+    status: Literal["wait", "done", "canceled"]
+    executed_volume: float
+    remaining_volume: float
+    created_at: int
+
+
+@dataclass
+class OrderBookItem:
+    ask_price: float
+    ask_quantity: float
+    bid_price: float
+    bid_quantity: float
+
+
+@dataclass
+class OrderBook:
+    symbol: str
+    timestamp: int
+    items: list[OrderBookItem]
+
+
+class CryptoExchange(ABC):
+    """
+    Abstract base class for crypto exchanges.
+    """
+
+    def __init__(self, requester: HTTPRequester) -> None:
+        self.requester = requester
+
+    def _raise_for_failed_response(self, status_code: int, message: str = None):
+        if status_code == 401:
+            raise AuthenticationException()
+        elif status_code == 400:
+            raise BadRequestException(message)
+        elif status_code == 404:
+            raise NotFoundException()
+        elif status_code == 429:
+            raise RateLimitException()
+        elif status_code == 500:
+            raise InternalServerErrorException()
+        else:
+            raise CryptoAPIException(status_code, message)
+
+    @abstractmethod
+    async def get_symbols(self) -> list[CryptoTradingPair]:
+        pass
+
+    @abstractmethod
+    async def get_tickers(self, symbol: str = "") -> list[Ticker]:
+        pass
+
+    @abstractmethod
+    async def get_balances(self) -> list[Balance]:
+        pass
+
+    @abstractmethod
+    async def get_open_orders(
+        self,
+        symbol: str,
+        page: int,
+        limit: int,
+        order_by: Literal["asc", "desc"] = "desc",
+    ) -> list[Order]:
+        pass
+
+    @abstractmethod
+    async def get_closed_orders(
+        self,
+        symbol: str,
+        page: int,
+        limit: int,
+        status: Optional[Literal["done", "canceled"]] = None,
+        start_date: Optional[int] = None,
+        end_date: Optional[int] = None,
+        order_by: Literal["asc", "desc"] = "desc",
+    ) -> list[Order]:
+        pass
+
+    @abstractmethod
+    async def get_order(self, order_id: str, symbol: str = None) -> Order:
+        pass
+
+    @abstractmethod
+    async def get_order_book(self, symbol: str) -> OrderBook:
+        pass
+
+    @abstractmethod
+    async def place_order(
+        self,
+        symbol: str,
+        side: Literal["bid", "ask"],
+        amount: float,
+        price: float,
+        order_type: Literal["limit", "market"],
+    ) -> Order:
+        pass
+
+    @abstractmethod
+    async def cancel_order(self, order_id: str, symbol: str = None) -> bool:
+        pass
