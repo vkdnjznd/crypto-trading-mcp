@@ -18,6 +18,7 @@ class FakeHTTPRequester(HTTPRequester):
         url: str,
         method: Literal["GET", "POST", "PUT", "DELETE"],
         data: Optional[dict] = None,
+        json: Optional[dict] = None,
         headers: Optional[dict] = None,
         params: Optional[dict] = None,
     ) -> httpx.Response:
