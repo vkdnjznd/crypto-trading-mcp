@@ -206,6 +206,54 @@ def success_order_book_response():
     )
 
 
+@pytest.fixture
+def success_place_order_response():
+    return httpx.Response(
+        200,
+        json={
+            "uuid": "cdd92199-2897-4e14-9448-f923320408ad",
+            "side": "bid",
+            "ord_type": "limit",
+            "price": "100.0",
+            "state": "wait",
+            "market": "KRW-BTC",
+            "created_at": "2018-04-10T15:42:23+09:00",
+            "volume": "0.01",
+            "remaining_volume": "0.01",
+            "reserved_fee": "0.0015",
+            "remaining_fee": "0.0015",
+            "paid_fee": "0.0",
+            "locked": "1.0015",
+            "executed_volume": "0.0",
+            "trades_count": 0,
+        },
+    )
+
+
+@pytest.fixture
+def success_cancel_order_response():
+    return httpx.Response(
+        200,
+        json={
+            "uuid": "cdd92199-2897-4e14-9448-f923320408ad",
+            "side": "bid",
+            "ord_type": "limit",
+            "price": "100.0",
+            "state": "wait",
+            "market": "KRW-BTC",
+            "created_at": "2018-04-10T15:42:23+09:00",
+            "volume": "0.01",
+            "remaining_volume": "0.01",
+            "reserved_fee": "0.0015",
+            "remaining_fee": "0.0015",
+            "paid_fee": "0.0",
+            "locked": "1.0015",
+            "executed_volume": "0.0",
+            "trades_count": 0,
+        },
+    )
+
+
 @pytest.mark.asyncio
 async def test_get_symbols(success_symbols_response):
     requester = FakeHTTPRequester(success_symbols_response)
@@ -351,3 +399,31 @@ async def test_get_failed_message():
 
     assert e.value.code == "400"
     assert e.value.message == "Get Balances Failed"
+
+
+@pytest.mark.asyncio
+async def test_place_order(success_place_order_response):
+    requester = FakeHTTPRequester(success_place_order_response)
+    sut = Upbit(requester)
+    order = await sut.place_order("KRW-BTC", "bid", 0.001, 104812000)
+
+    assert order == Order(
+        order_id="cdd92199-2897-4e14-9448-f923320408ad",
+        side="bid",
+        amount=0.01,
+        price=100.0,
+        order_type="limit",
+        status="wait",
+        executed_volume=0.0,
+        remaining_volume=0.01,
+        created_at=1523342543000,
+    )
+
+
+@pytest.mark.asyncio
+async def test_cancel_order(success_cancel_order_response):
+    requester = FakeHTTPRequester(success_cancel_order_response)
+    sut = Upbit(requester)
+    result = await sut.cancel_order("cdd92199-2897-4e14-9448-f923320408ad")
+
+    assert result is True
