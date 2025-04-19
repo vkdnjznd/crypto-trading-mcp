@@ -7,6 +7,9 @@
 A simple Model Context Protocol (MCP) server for price lookup and trading across multiple cryptocurrency exchanges.
 
 
+https://github.com/user-attachments/assets/34f3a431-9370-4832-923e-ab89bf1d4913
+
+
 ## Requirements
 
 - Python 3.10 or higher
