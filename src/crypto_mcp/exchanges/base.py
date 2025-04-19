@@ -31,11 +31,14 @@ class Ticker:
     opening_price: float
     high_price: float
     low_price: float
-    change_rate: float
+    change_percentage: float
     change_price: float
     acc_trade_volume: float
     acc_trade_price: float
     timestamp: int
+
+    def __post_init__(self):
+        self.change_percentage = round(self.change_percentage, 2)
 
 
 @dataclass

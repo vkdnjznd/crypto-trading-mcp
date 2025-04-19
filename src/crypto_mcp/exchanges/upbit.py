@@ -95,7 +95,7 @@ class Upbit(CryptoExchange):
                 opening_price=ticker["opening_price"],
                 high_price=ticker["high_price"],
                 low_price=ticker["low_price"],
-                change_rate=ticker["change_rate"],
+                change_percentage=ticker["signed_change_rate"] * 100,
                 change_price=ticker["change_price"],
                 acc_trade_volume=ticker["acc_trade_volume"],
                 acc_trade_price=ticker["acc_trade_price"],

@@ -105,7 +105,7 @@ class GateIO(CryptoExchange):
                 opening_price=None,
                 high_price=float(item["high_24h"]),
                 low_price=float(item["low_24h"]),
-                change_rate=float(item["change_percentage"]),
+                change_percentage=float(item["change_percentage"]),
                 change_price=None,
                 acc_trade_volume=float(item["quote_volume"]),
                 acc_trade_price=float(item["quote_volume"]) * float(item["last"]),
