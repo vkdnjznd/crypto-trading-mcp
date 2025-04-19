@@ -1,4 +1,5 @@
 import httpx
+import json
 
 from abc import ABC, abstractmethod
 from typing import Literal, Optional
@@ -83,6 +84,23 @@ class CryptoExchange(ABC):
     def __init__(self, requester: HTTPRequester) -> None:
         self.requester = requester
 
+    def _get_error_message(
+        self, response: httpx.Response, message_fields: list[str]
+    ) -> str:
+        # response: failed response from exchange API
+        # message_fields: fields to extract a error message from body of the response
+        # You can use dot notation to access nested fields,
+        # e.g. "error.message" will be converted to ["error"]["message"]
+
+        try:
+            data = response.json()
+            for field in message_fields.strip().split("."):
+                data = data[field]
+
+            return data
+        except (AttributeError, KeyError, json.JSONDecodeError):
+            return ""
+
     def _raise_for_failed_response(self, status_code: int, message: str = None):
         if status_code == 401:
             raise AuthenticationException(
@@ -100,10 +118,6 @@ class CryptoExchange(ABC):
             )
         else:
             raise CryptoAPIException(str(status_code), message)
-
-    @abstractmethod
-    def _get_error_message(self, response: httpx.Response) -> str:
-        pass
 
     @abstractmethod
     async def get_symbols(self) -> list[CryptoTradingPair]:
@@ -155,7 +169,7 @@ class CryptoExchange(ABC):
         side: Literal["bid", "ask"],
         amount: float,
         price: float,
-        order_type: Literal["limit", "market"],
+        order_type: Literal["limit", "market"] = "limit",
     ) -> Order:
         pass
 

@@ -56,20 +56,13 @@ class Upbit(CryptoExchange):
         self.requester = requester
         self.base_url = "https://api.upbit.com/v1"
 
-    def _get_error_message(self, response: httpx.Response) -> str:
-        try:
-            data = response.json()
-            return data["error"]["message"]
-        except (AttributeError, KeyError, json.JSONDecodeError):
-            return ""
-
     async def get_symbols(self) -> List[CryptoTradingPair]:
         response = await self.requester.get(
             url=f"{self.base_url}/market/all",
         )
         if response.is_error:
             self._raise_for_failed_response(
-                response.status_code, self._get_error_message(response)
+                response.status_code, self._get_error_message(response, "error.message")
             )
 
         markets = response.json()
@@ -89,7 +82,7 @@ class Upbit(CryptoExchange):
         )
         if response.is_error:
             self._raise_for_failed_response(
-                response.status_code, self._get_error_message(response)
+                response.status_code, self._get_error_message(response, "error.message")
             )
 
         tickers = response.json()
@@ -117,7 +110,7 @@ class Upbit(CryptoExchange):
         )
         if response.is_error:
             self._raise_for_failed_response(
-                response.status_code, self._get_error_message(response)
+                response.status_code, self._get_error_message(response, "error.message")
             )
 
         balances = response.json()
@@ -154,7 +147,7 @@ class Upbit(CryptoExchange):
         )
         if response.is_error:
             self._raise_for_failed_response(
-                response.status_code, self._get_error_message(response)
+                response.status_code, self._get_error_message(response, "error.message")
             )
 
         orders = response.json()
@@ -201,7 +194,7 @@ class Upbit(CryptoExchange):
         )
         if response.is_error:
             self._raise_for_failed_response(
-                response.status_code, self._get_error_message(response)
+                response.status_code, self._get_error_message(response, "error.message")
             )
 
         orders = response.json()
@@ -227,7 +220,7 @@ class Upbit(CryptoExchange):
         )
         if response.is_error:
             self._raise_for_failed_response(
-                response.status_code, self._get_error_message(response)
+                response.status_code, self._get_error_message(response, "error.message")
             )
 
         orders = response.json()
@@ -251,7 +244,7 @@ class Upbit(CryptoExchange):
         )
         if response.is_error:
             self._raise_for_failed_response(
-                response.status_code, self._get_error_message(response)
+                response.status_code, self._get_error_message(response, "error.message")
             )
 
         order_book = response.json()[0]
@@ -291,7 +284,7 @@ class Upbit(CryptoExchange):
         )
         if response.is_error:
             self._raise_for_failed_response(
-                response.status_code, self._get_error_message(response)
+                response.status_code, self._get_error_message(response, "error.message")
             )
 
         order = response.json()
@@ -315,7 +308,7 @@ class Upbit(CryptoExchange):
 
         if response.is_error:
             self._raise_for_failed_response(
-                response.status_code, self._get_error_message(response)
+                response.status_code, self._get_error_message(response, "error.message")
             )
 
         return True

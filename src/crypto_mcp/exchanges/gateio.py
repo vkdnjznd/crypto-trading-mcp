@@ -66,19 +66,12 @@ class GateIO(CryptoExchange):
         super().__init__(requester)
         self.base_url = "https://api.gateio.ws/api/v4"
 
-    def _get_error_message(self, response: httpx.Response) -> str:
-        try:
-            data = response.json()
-            return data["message"]
-        except (AttributeError, KeyError, json.JSONDecodeError):
-            return ""
-
     async def get_symbols(self) -> list[CryptoTradingPair]:
         response = await self.requester.get(f"{self.base_url}/spot/currency_pairs")
 
         if response.is_error:
             self._raise_for_failed_response(
-                response.status_code, self._get_error_message(response)
+                response.status_code, self._get_error_message(response, "message")
             )
 
         data = response.json()
@@ -98,7 +91,7 @@ class GateIO(CryptoExchange):
 
         if response.is_error:
             self._raise_for_failed_response(
-                response.status_code, self._get_error_message(response)
+                response.status_code, self._get_error_message(response, "message")
             )
 
         data = response.json()
@@ -126,7 +119,7 @@ class GateIO(CryptoExchange):
 
         if response.is_error:
             self._raise_for_failed_response(
-                response.status_code, self._get_error_message(response)
+                response.status_code, self._get_error_message(response, "message")
             )
 
         data = response.json()
@@ -181,7 +174,7 @@ class GateIO(CryptoExchange):
 
         if response.is_error:
             self._raise_for_failed_response(
-                response.status_code, self._get_error_message(response)
+                response.status_code, self._get_error_message(response, "message")
             )
 
         data = response.json()
@@ -215,7 +208,7 @@ class GateIO(CryptoExchange):
 
         if response.is_error:
             self._raise_for_failed_response(
-                response.status_code, self._get_error_message(response)
+                response.status_code, self._get_error_message(response, "message")
             )
 
         data = response.json()
@@ -229,7 +222,7 @@ class GateIO(CryptoExchange):
 
         if response.is_error:
             self._raise_for_failed_response(
-                response.status_code, self._get_error_message(response)
+                response.status_code, self._get_error_message(response, "message")
             )
 
         data = response.json()
@@ -242,7 +235,7 @@ class GateIO(CryptoExchange):
 
         if response.is_error:
             self._raise_for_failed_response(
-                response.status_code, self._get_error_message(response)
+                response.status_code, self._get_error_message(response, "message")
             )
 
         data = response.json()
@@ -280,7 +273,7 @@ class GateIO(CryptoExchange):
         response = await self.requester.post(f"{self.base_url}/spot/orders", json=data)
         if response.is_error:
             self._raise_for_failed_response(
-                response.status_code, self._get_error_message(response)
+                response.status_code, self._get_error_message(response, "message")
             )
 
         order_data = response.json()
@@ -294,7 +287,7 @@ class GateIO(CryptoExchange):
 
         if response.is_error:
             self._raise_for_failed_response(
-                response.status_code, self._get_error_message(response)
+                response.status_code, self._get_error_message(response, "message")
             )
 
         return True
