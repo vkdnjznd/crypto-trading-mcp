@@ -3,7 +3,7 @@ import httpx
 
 
 from typing import Literal, Optional
-from crypto_mcp.http_handler import HTTPRequester
+from crypto_trading_mcp.http_handler import HTTPRequester
 
 
 class FakeHTTPRequester(HTTPRequester):

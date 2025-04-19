@@ -6,8 +6,8 @@ from typing import Optional, Literal, Callable
 from functools import wraps
 from fastmcp import FastMCP
 
-from crypto_mcp.exchanges.factory import get_factory, factories
-from crypto_mcp.exceptions import CryptoAPIException
+from crypto_trading_mcp.exchanges.factory import get_factory, factories
+from crypto_trading_mcp.exceptions import CryptoAPIException
 
 
 def envelope(func: Callable) -> Callable:

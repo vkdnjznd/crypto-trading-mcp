@@ -1,12 +1,12 @@
 from abc import ABC, abstractmethod
 
-from crypto_mcp.exchanges.base import CryptoExchange
-from crypto_mcp.exchanges.upbit import Upbit
-from crypto_mcp.exchanges.gateio import GateIO
-from crypto_mcp.http_handler import HTTPRequester
-from crypto_mcp.exchanges.upbit import UpbitRequester
-from crypto_mcp.exchanges.gateio import GateIOAuth
-from crypto_mcp.exchanges.binance import Binance, BinanceAuth
+from crypto_trading_mcp.exchanges.base import CryptoExchange
+from crypto_trading_mcp.exchanges.upbit import Upbit
+from crypto_trading_mcp.exchanges.gateio import GateIO
+from crypto_trading_mcp.http_handler import HTTPRequester
+from crypto_trading_mcp.exchanges.upbit import UpbitRequester
+from crypto_trading_mcp.exchanges.gateio import GateIOAuth
+from crypto_trading_mcp.exchanges.binance import Binance, BinanceAuth
 
 
 class ExchangeFactory(ABC):

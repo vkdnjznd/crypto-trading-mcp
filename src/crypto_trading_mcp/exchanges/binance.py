@@ -8,7 +8,7 @@ import os
 from urllib.parse import unquote
 from typing import Literal, Optional, Generator
 
-from crypto_mcp.exchanges.base import (
+from crypto_trading_mcp.exchanges.base import (
     CryptoExchange,
     CryptoTradingPair,
     Ticker,

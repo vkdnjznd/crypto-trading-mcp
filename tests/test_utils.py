@@ -1,4 +1,4 @@
-from crypto_mcp.utils import iso_to_timestamp, timestamp_to_iso
+from crypto_trading_mcp.utils import iso_to_timestamp, timestamp_to_iso
 
 
 def test_iso_to_timestamp():

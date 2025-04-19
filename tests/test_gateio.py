@@ -1,8 +1,8 @@
 import pytest
 import httpx
 
-from crypto_mcp.exchanges.gateio import GateIO, GateIOAuth
-from crypto_mcp.exchanges.base import (
+from crypto_trading_mcp.exchanges.gateio import GateIO, GateIOAuth
+from crypto_trading_mcp.exchanges.base import (
     CryptoTradingPair,
     OrderBook,
     OrderBookItem,

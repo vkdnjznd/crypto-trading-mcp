@@ -1,8 +1,8 @@
 import pytest
 import httpx
 
-from crypto_mcp.exchanges.upbit import Upbit
-from crypto_mcp.exchanges.base import (
+from crypto_trading_mcp.exchanges.upbit import Upbit
+from crypto_trading_mcp.exchanges.base import (
     CryptoTradingPair,
     OrderBook,
     OrderBookItem,
@@ -11,7 +11,7 @@ from crypto_mcp.exchanges.base import (
     Order,
 )
 from tests.test_requester import FakeHTTPRequester
-from crypto_mcp.exceptions import CryptoAPIException
+from crypto_trading_mcp.exceptions import CryptoAPIException
 
 
 @pytest.fixture

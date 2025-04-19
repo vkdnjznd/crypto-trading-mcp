@@ -8,7 +8,7 @@ import json
 from typing import List, Optional, Literal
 from urllib.parse import urlencode, unquote
 
-from crypto_mcp.exchanges.base import (
+from crypto_trading_mcp.exchanges.base import (
     CryptoExchange,
     Balance,
     CryptoTradingPair,
@@ -17,8 +17,8 @@ from crypto_mcp.exchanges.base import (
     OrderBookItem,
     Ticker,
 )
-from crypto_mcp.http_handler import HTTPRequester, BearerAuth
-from crypto_mcp.utils import iso_to_timestamp
+from crypto_trading_mcp.http_handler import HTTPRequester, BearerAuth
+from crypto_trading_mcp.utils import iso_to_timestamp
 
 
 class UpbitRequester(HTTPRequester):

@@ -8,7 +8,7 @@ import json
 from typing import Literal, Optional, Generator
 from urllib.parse import unquote
 
-from crypto_mcp.exchanges.base import (
+from crypto_trading_mcp.exchanges.base import (
     CryptoExchange,
     CryptoTradingPair,
     Ticker,
@@ -17,7 +17,7 @@ from crypto_mcp.exchanges.base import (
     OrderBook,
     OrderBookItem,
 )
-from crypto_mcp.http_handler import HTTPRequester
+from crypto_trading_mcp.http_handler import HTTPRequester
 
 
 class GateIOAuth(httpx.Auth):
