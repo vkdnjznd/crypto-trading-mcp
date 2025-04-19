@@ -1,0 +1,32 @@
+[project]
+name = "crypto_mcp"
+version = "0.1.0"
+description = "MCP Server for Trading Cryptocurrency"
+dependencies = [
+    "fastmcp>=2.1.0",
+    "pydantic>=2.11.3",
+    "httpx>=0.28.1",
+    "python-dotenv>=1.1.0",
+    "PyJWT>=2.10.1",
+    "black>=25.1.0",
+    "isort>=6.0.1",
+    "uvicorn>=0.34.0",
+    "starlette>=0.46.1",
+    "sse-starlette>=2.2.1",
+    "pytz>=2025.2",
+]
+requires-python = ">=3.10.16"
+
+[project.optional-dependencies]
+dev = [
+    "black>=25.1.0",
+    "isort>=6.0.1",
+]
+test = [
+    "pytest>=8.3.5",
+    "pytest-asyncio>=0.26.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
